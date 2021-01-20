@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hepeng.springcloud.dao.PaymentDao">
+    <sql id="payment_column_list">
+      id,serial
+    </sql>
+    <insert id="create" parameterType="com.hepeng.springcloud.entities.Payment" keyProperty="id">
+
+                insert into payment(serial) values(#{serial,jdbcType=VARCHAR})
+
+    </insert>
+    <delete id="deletePaymentById" parameterType="int">
+        delete from payment
+        <if test="id != null">
+            where id = #{id}
+        </if>
+    </delete>
+    <update id="updatePayment" parameterType="int">
+        update payment
+        <set>
+            <if test="serial != null">
+                serial = #{serial,jdbcType=VARCHAR}
+            </if>
+        </set>
+        <if test="id != null">
+            where id = #{id,jdbcType=VARCHAR}
+        </if>
+    </update>
+    <resultMap id="BaseResultMap" type="com.hepeng.springcloud.entities.Payment">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <id column="serial" property="serial" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getPaymentById" parameterType="Long" resultMap="BaseResultMap">
+
+                select * from payment where id=#{id}
+
+    </select>
+    <select id="findAllPayment"  resultMap="BaseResultMap">
+        select <include refid="payment_column_list"/>
+        from payment
+    </select>
+</mapper>

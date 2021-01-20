@@ -1,0 +1,11 @@
+server:
+  port: 80
+
+eureka:
+  client:
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/
+#logging:
+  #level:
+    #com.hepeng.springcloud.service: debug

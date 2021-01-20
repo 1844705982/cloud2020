@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        table {
+            font-family: verdana, arial, sans-serif;
+            font-size: 15px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        table th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        table td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+
+    </style>
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+    <script>
+        function addPayment() {
+            var info = $("form:eq(0)").serialize();
+            $.ajax({
+                url: "paymentController/addPayment.do",
+                data: info,
+                success: function (date) {
+                    findAllPayment();
+                },
+                dataType: "json"
+            });
+        }
+
+        function findAllPayment() {
+            $("tbody:eq(0)").empty();
+            $.post(
+                "paymentController/findAllPayment.do",
+                null,
+                function (data) {
+                    for (var i in data) {
+                        $("tbody:eq(0)").append("<tr><td>" + data[i].id + "</td><td>" + data[i].serial + "</td><td><a href='javascript:;' onclick='getPaymentById(" + data[i].id + ")'>修改</a> <a href='javascript:;' onclick='deletePayment(" + data[i].id + ")'>|删除</a></td></tr>");
+                    }
+                }, "json"
+            );
+        }
+
+        function deletePayment(id) {
+            $.ajax({
+                url: "paymentController/deletePayment.do",
+                data: {"id": id},
+                success: function (date) {
+                    findAllPayment();
+                },
+                dataType: "json"
+            });
+        }
+
+        function getPaymentById(id) {
+            $.ajax({
+                url: "paymentController/getPaymentById.do",
+                data: {"id": id},
+                success: function (date) {
+                    $(":text:eq(1)").val(date.id);
+                    $(":text:eq(2)").val(date.serial);
+                },
+                dataType: "json"
+            });
+        }
+
+        function updatePayment() {
+            var info = $("form:eq(1)").serialize();
+            $.ajax({
+                url: "paymentController/updatePayment.do",
+                data: info,
+                success: function (date) {
+                    findAllPayment();
+                },
+                dataType: "json"
+            });
+        }
+    </script>
+</head>
+<body onload="findAllPayment()">
+<form action="#" method="post">
+    商品名称:<input type="text" name="serial">
+    <input type="button" onclick="addPayment()" value="添加">
+</form>
+<br>
+<table border="1px solid black" width="300px">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>商品名字</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
+<br>
+<form action="#" method="post">
+    商品Id：<input type="text" name="id" style="width: 20px">
+    商品名称:<input type="text" name="serial">
+    <input type="button" onclick="updatePayment()" value="修改">
+</form>
+</body>
+</html>
